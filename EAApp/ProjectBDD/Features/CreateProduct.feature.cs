@@ -139,6 +139,9 @@ this.ScenarioInitialize(scenarioInfo);
 #line 16
  testRunner.Then("I check if actual product details are the same with created one", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
+#line 17
+ testRunner.Then("I cleanup flow", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
             }
             this.ScenarioCleanup();
         }
