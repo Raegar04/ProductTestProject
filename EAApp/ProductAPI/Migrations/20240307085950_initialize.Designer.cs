@@ -11,7 +11,7 @@ using ProductAPI.Data;
 namespace ProductAPI.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20240306144931_initialize")]
+    [Migration("20240307085950_initialize")]
     partial class initialize
     {
         /// <inheritdoc />

@@ -1,4 +1,5 @@
 using ProductAPI.Data;
+using ProductAPI.Repository;
 using ProductTestProject.Pages;
 using System.Xml.Linq;
 using TechTalk.SpecFlow.Assist;
@@ -15,11 +16,13 @@ namespace ProjectBDD.StepDefinitions
         private readonly IProductDetailsPage _productDetailsPage;
 
         private readonly ICreateProductPage _createProductPage;
+        private readonly IProductRepository productRepository;
+        private ScenarioContext _scenarioContext;
 
-        private Product testProduct;
-
-        public CreateProductStepDefinitions(IHomePage homePage, IProductDetailsPage productDetailsPage, IProductPage productPage, ICreateProductPage createProductPage)
+        public CreateProductStepDefinitions(IProductRepository productRepository,ScenarioContext scenarioContext, IHomePage homePage, IProductDetailsPage productDetailsPage, IProductPage productPage, ICreateProductPage createProductPage)
         {
+            this.productRepository = productRepository;
+            _scenarioContext = scenarioContext;
             _createProductPage = createProductPage;
             _homePage = homePage;
             _productPage = productPage;
@@ -29,6 +32,7 @@ namespace ProjectBDD.StepDefinitions
         [Given(@"I go to the product page")]
         public void GivenIGoToTheProductPage()
         {
+            var a = productRepository.GetAllProducts();
             _homePage.GoToProductPage();
         }
 
@@ -41,13 +45,15 @@ namespace ProjectBDD.StepDefinitions
         [Given(@"I create product with details:")]
         public void GivenICreateProductWithDetails(Table table)
         {
-            testProduct = table.CreateInstance<Product>();
+            var testProduct = table.CreateInstance<Product>();
             _createProductPage.CreateProduct(testProduct);
+            _scenarioContext.Set(testProduct);
         }
 
         [When(@"I go to details of the newly created entity")]
         public void WhenIGoToDetailsOfTheNewlyCreatedEntity()
         {
+            var testProduct = _scenarioContext.Get<Product>();
             _productPage.PerformOperation(TestFramework.Helpers.OperationType.Details, "Name", testProduct.Name);
         }
 
@@ -56,6 +62,7 @@ namespace ProjectBDD.StepDefinitions
         {
             var actualProduct = _productDetailsPage.GetProduct();
 
+            var testProduct = _scenarioContext.Get<Product>();
             Assert.NotNull(actualProduct);
             actualProduct.Should().BeEquivalentTo(testProduct, cds => cds.IncludingAllDeclaredProperties());
         }

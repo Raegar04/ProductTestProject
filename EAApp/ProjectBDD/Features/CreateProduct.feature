@@ -14,3 +14,4 @@ Scenario: Create product
 		| Test | Test        | 12    | CPU         |
 	When I go to details of the newly created entity
 	Then I check if actual product details are the same with created one
+	Then I cleanup flow

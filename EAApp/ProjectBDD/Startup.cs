@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProductAPI.Data;
+using ProductAPI.Repository;
 using ProductTestProject.Helpers;
 using ProductTestProject.Pages;
 using SolidToken.SpecFlow.DependencyInjection;
@@ -21,6 +24,9 @@ namespace ProjectBDD
             var services = new ServiceCollection();
 
             services.ConfigureTestProject();
+            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            services.AddDbContext<ProductDbContext>(cfg=>cfg.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             return services;
         }
