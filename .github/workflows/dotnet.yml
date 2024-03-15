@@ -25,5 +25,6 @@ jobs:
       working-directory: EAApp/ProductAPI
     - name: Build
       run: dotnet build --no-restore
+      working-directory: EAApp/ProductAPI
     - name: Test
       run: dotnet test --no-build --verbosity normal
